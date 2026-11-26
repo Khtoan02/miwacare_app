@@ -231,3 +231,14 @@ create policy claims_self    on public.program_claims for select to authenticate
 create policy devices_self   on public.devices       for all    to authenticated using (member_id = auth.uid()) with check (member_id = auth.uid());
 create policy admins_read    on public.admin_users   for select to authenticated using (id = auth.uid() or is_admin('admin'));
 create policy audit_admin    on public.audit_logs    for select to authenticated using (is_admin('admin'));
+
+-- ───────────────────────── Quyền API (Data API) ─────────────────────────
+-- Dự án tạo với "Grant API access to new tables automatically" TẮT, nên cấp quyền rõ ràng.
+-- anon (chưa đăng nhập): không có quyền gì. authenticated: có quyền ở mức bảng, còn
+-- được đọc/ghi dòng nào là do RLS ở trên quyết định. service_role: máy chủ, toàn quyền.
+grant usage on schema public to anon, authenticated, service_role;
+grant select, insert, update, delete on all tables in schema public to authenticated;
+grant all on all tables in schema public to service_role;
+grant usage, select on all sequences in schema public to authenticated, service_role;
+revoke all on function public.is_admin(text) from public, anon;
+grant execute on function public.is_admin(text) to authenticated, service_role;

@@ -21,6 +21,7 @@ App thành viên Android + iOS (Expo), có database trung tâm và CRM riêng; k
 | 10 | [Use case](10-use-case.md) | Ai làm được gì với hệ thống | Tất cả |
 | 11 | [Kế hoạch triển khai](11-ke-hoach-trien-khai.md) | Làm gì, ai làm, khi nào xong | Tất cả |
 | 12 | [Quyết định đã chốt](12-quyet-dinh-da-chot.md) | Đã chốt những gì, ưu tiên hơn 00–11 | Tất cả |
+| — | [Phương án kết nối Pancake](pancake/phuong-an-ket-noi.md) | Đề xuất, chưa chốt: lấy đơn từ Pancake, MiwaCare tự tính điểm | Chủ dự án, kỹ thuật |
 
 ## Mã tham chiếu dùng chung
 - `BR-xx`: quy tắc nghiệp vụ (02) · `NFR-xx`: yêu cầu phi chức năng (02)

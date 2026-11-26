@@ -27,8 +27,9 @@
 
 ## Mã nguồn (từ 2026-11-26)
 - `apps/mobile/`: app Expo SDK 58 — xem `apps/mobile/README.md` (chạy thử, dữ liệu mẫu, cấu trúc). Đọc `apps/mobile/AGENTS.md` trước khi dùng API Expo.
-- `supabase/migrations/`: schema + RLS; `supabase/seed.sql`: dữ liệu mẫu. Chưa áp lên Supabase thật.
-- Chưa có: `apps/admin` (trang quản trị), Edge Functions, nối app với Supabase.
+- `supabase/migrations/`: schema + RLS; `supabase/seed.sql`: dữ liệu mẫu. Đã áp lên dự án Supabase `miwacare` (ref `rbvbytqpsfqbspfnditx`, Singapore, Free) ngày 2026-11-26 bằng `npx supabase@latest db push --remote`. URL + khoá publishable nằm trong `.env`; khoá secret và mật khẩu DB không lưu trong repo.
+- `apps/admin/`: trang quản trị Vite + React (Cloudflare Pages) — xem `apps/admin/README.md`. Dùng chung hàm tính điểm `apps/mobile/src/domain`. Chạy trên dữ liệu mẫu; khi nối Supabase chỉ sửa `src/data/api.ts`.
+- Chưa có: Edge Functions, nối app + trang quản trị với Supabase.
 
 ## Quy ước kỹ thuật
 - Expo SDK mới nhất, TypeScript strict, Expo Router cho điều hướng.

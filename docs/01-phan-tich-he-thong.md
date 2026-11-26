@@ -47,7 +47,7 @@
 
 - Địa chỉ gốc: `https://pos.pages.fm/api/v1`, xác thực bằng `api_key` trên query, `shop_id` nằm trong đường dẫn.
 - Giới hạn: đọc dưới 30 request/giây, ghi dưới 100 request/giây (mỗi endpoint, mỗi shop). Sai khoá 20 lần trong 1 phút thì IP bị khoá 5 phút.
-- Webhook gồm các loại: `orders` (tạo/sửa đơn), `customers` (tạo/sửa khách), `products`, `variations_warehouses`… **Không có chữ ký HMAC**, chỉ có header bí mật do mình đặt. Webhook lỗi thì Pancake thử lại sau 10 phút, rồi 30 phút nữa, sau đó **dừng hẳn**.
+- Webhook gồm các loại: `orders` (tạo/sửa đơn), `customers` (tạo/sửa khách), `products`, `variations_warehouses`… **Không có chữ ký HMAC**, chỉ có header bí mật do mình đặt. Webhook lỗi thì Pancake thử lại sau 10 phút, rồi 30 phút nữa, sau đó bỏ sự kiện đó; máy chủ lỗi liên tục thì Pancake tạm ngưng gửi, URL sai thì Pancake tắt hẳn webhook (cập nhật 2026-11-26, xem `pancake/phuong-an-ket-noi.md`).
 - **Không có** API cộng/trừ điểm. Chỉ có:
   - đọc lịch sử điểm: `GET /shops/{SHOP_ID}/customers/point_logs?shop_customer_id=…`
   - ghi đè trường `reward_point` qua `PUT /shops/{SHOP_ID}/customers/{ID}`. Tài liệu không nói đây là giá trị tuyệt đối hay cộng thêm, cũng không nói có tạo dòng lịch sử điểm hay không.

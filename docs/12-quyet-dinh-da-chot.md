@@ -62,6 +62,6 @@ Hệ quả kỹ thuật:
 - Mã QR chỉ dùng cho **chương trình riêng** (F-25, F-81, giai đoạn sau).
 
 ## Câu hỏi còn mở
-1. **Nguồn đơn hàng khi chưa có Pancake:** điểm được tính từ đơn nào? Phương án tạm: nhân viên nhập đơn hoặc nhập file Excel/CSV trên trang quản trị. Cần chốt trước khi chạy thật.
+1. **Nguồn đơn hàng khi chưa có Pancake:** điểm được tính từ đơn nào? Phương án tạm: nhân viên nhập đơn hoặc nhập file Excel/CSV trên trang quản trị. Cần chốt trước khi chạy thật. Đề xuất mới (2026-11-26): lấy đơn từ Pancake, máy chủ MiwaCare vẫn tự tính điểm — xem `pancake/phuong-an-ket-noi.md`.
 2. Tên các hạng, quy tắc tích điểm cụ thể (nhập vào cấu hình khi bạn sẵn sàng).
 3. Tỷ lệ khách dùng iPhone / Android (để ưu tiên kiểm thử).
