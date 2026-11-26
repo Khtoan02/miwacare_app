@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MiwaCare UI Guideline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --white:#FFFFFF;--sky-50:#D1EEFC;--sky-100:#ABE7FF;--sky-400:#6BCAFA;--sky-800:#0A5E8E;
+  --navy-900:#15234B;--navy-800:#1E2F5E;--navy-950:#0B1430;--tier-top:#2A3F7A;
+  --lemon-50:#FCFBA9;--lemon-100:#FBFB8A;--leaf-200:#AED283;--leaf-400:#84BB60;--leaf-800:#336419;
+  --sun-50:#FFFBB0;--sun-75:#EFEFB4;--sun-100:#F2DFA8;--sun-300:#F1BC63;--sun-400:#F2BE21;--sun-500:#F7A231;--sun-700:#D09F2A;
+  --amber-800:#8A5A00;--red-700:#B42318;--ink-muted:#4A5677;--ink-muted-dark:#A9B4D0;
+
+  --bg:var(--white);--bg-tint:var(--sky-50);--surface:var(--white);--text:var(--navy-900);--text-muted:var(--ink-muted);
+  --link:var(--sky-800);--border:#DDEAF3;--primary-bg:var(--navy-900);--primary-fg:var(--white);
+  --success-fg:var(--leaf-800);--success-bg:#EEF6E7;--warn-fg:var(--amber-800);--warn-bg:var(--sun-50);
+  --danger-fg:var(--red-700);--danger-bg:#FDECEA;--shadow:0 8px 24px -8px rgba(21,35,75,.10);--shadow-raised:0 16px 36px -10px rgba(21,35,75,.16);
+  --ui:'Open Sans',system-ui,sans-serif;--brand:'Comfortaa','Open Sans',sans-serif;
+}
+.dark{
+  --bg:var(--navy-950);--bg-tint:var(--navy-900);--surface:var(--navy-900);--text:var(--white);--text-muted:var(--ink-muted-dark);
+  --link:var(--sky-400);--border:var(--navy-800);--primary-bg:var(--sky-400);--primary-fg:var(--navy-900);
+  --success-fg:var(--leaf-400);--success-bg:#1F3A1A;--warn-fg:var(--sun-500);--warn-bg:#3A2C0B;--danger-fg:#F97066;--danger-bg:#3B1512;
+  --shadow:none;--shadow-raised:none;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#F4F8FB;color:var(--navy-900);font-family:var(--ui);line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:32px 20px 80px}
+header.top{background:linear-gradient(180deg,var(--sky-50),#fff);border-radius:28px;padding:32px;margin-bottom:28px;position:relative;overflow:hidden}
+header.top h1{font-family:var(--brand);font-size:clamp(28px,4vw,40px);margin:0 0 6px}
+header.top p{margin:0;color:var(--ink-muted);max-width:720px}
+.cloud{position:absolute;right:-20px;top:-10px;width:220px;opacity:.9}
+section{background:#fff;border-radius:24px;padding:28px;margin-bottom:24px;box-shadow:0 8px 24px -8px rgba(21,35,75,.08)}
+section h2{font-size:22px;margin:0 0 4px}
+section .sub{color:var(--ink-muted);margin:0 0 20px;font-size:14px}
+.grid{display:grid;gap:12px}
+.sw-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+.sw{border-radius:16px;overflow:hidden;border:1px solid #E6EEF4;font-size:12px}
+.sw .c{height:72px;display:flex;align-items:flex-end;padding:8px;font-weight:700}
+.sw .m{padding:8px;line-height:1.35}
+.sw .m b{display:block;font-size:13px}
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--sky-50);color:var(--navy-900);margin-left:6px;vertical-align:middle}
+.tag.d{background:#FFF4D6;color:var(--amber-800)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid #EEF3F7;vertical-align:top}
+th{color:var(--ink-muted);font-weight:600;font-size:12px;text-transform:none}
+.type-row{display:grid;grid-template-columns:130px 1fr;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid #EEF3F7}
+.type-row code{font-size:12px;color:var(--ink-muted)}
+.phones{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+.phone{background:var(--bg);color:var(--text);border-radius:36px;border:8px solid #0E1530;padding:18px 16px 0;min-height:640px;position:relative;overflow:hidden;font-family:var(--ui)}
+.phone .status{display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:10px;color:var(--text)}
+.hello{font-family:var(--brand);font-size:22px;margin:4px 0 2px}
+.muted{color:var(--text-muted)}
+.card{border-radius:28px;padding:18px;box-shadow:var(--shadow-raised);position:relative;overflow:hidden;margin:14px 0}
+.card .row{display:flex;justify-content:space-between;align-items:center}
+.card .brand{font-family:var(--brand);font-weight:700;font-size:13px;letter-spacing:.5px}
+.card .tier{font-family:var(--brand);font-weight:700;font-size:15px}
+.card .pts{font-family:var(--brand);font-size:32px;font-weight:700;line-height:1.2;margin:10px 0 2px;font-variant-numeric:tabular-nums}
+.card .pts .sun{color:var(--sun-400)}
+.prog{height:8px;border-radius:999px;background:rgba(255,255,255,.6);overflow:hidden;margin:6px 0 12px}
+.prog i{display:block;height:100%;width:72%;border-radius:999px;background:linear-gradient(90deg,var(--sky-400),var(--leaf-400))}
+.code{background:#fff;border-radius:16px;padding:10px 14px;text-align:center;color:#111}
+.bars{height:46px;background:repeating-linear-gradient(90deg,#111 0 2px,#fff 2px 4px,#111 4px 5px,#fff 5px 8px,#111 8px 11px,#fff 11px 12px);border-radius:4px}
+.code small{display:block;font-size:11px;margin-top:4px;letter-spacing:2px;color:#333}
+.t1{background:linear-gradient(135deg,var(--sky-50),var(--sky-100));color:var(--navy-900)}
+.t2{background:linear-gradient(135deg,var(--leaf-200),var(--leaf-400));color:var(--navy-900)}
+.t3{background:linear-gradient(135deg,var(--sun-50),var(--sun-400));color:var(--navy-900)}
+.t4{background:linear-gradient(135deg,var(--navy-900),var(--tier-top));color:#fff;border:2px solid var(--sun-400)}
+.t4 .prog i{background:var(--sun-400)}
+.t4 .prog{background:rgba(255,255,255,.2)}
+.mini-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.btn{font-family:var(--ui);font-weight:600;font-size:15px;border:0;border-radius:999px;height:48px;padding:0 22px;cursor:pointer}
+.b-primary{background:var(--primary-bg);color:var(--primary-fg)}
+.b-brand{background:var(--sky-400);color:var(--navy-900)}
+.b-reward{background:var(--sun-400);color:var(--navy-900)}
+.b-sec{background:transparent;color:var(--text);box-shadow:inset 0 0 0 1.5px var(--text)}
+.b-ghost{background:transparent;color:var(--link)}
+.b-danger{background:var(--red-700);color:#fff}
+.btns{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:13px;border-radius:999px;padding:4px 10px;font-variant-numeric:tabular-nums}
+.plus{color:var(--success-fg);background:var(--success-bg)}
+.minus{color:var(--danger-fg);background:var(--danger-bg)}
+.warn{color:var(--warn-fg);background:var(--warn-bg)}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin:16px 0 8px;font-weight:700}
+.section-title a{color:var(--link);font-size:13px;text-decoration:none;font-weight:600}
+.offer{display:flex;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:10px;margin-bottom:10px}
+.offer .img{width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,var(--sun-50),var(--sun-300));flex:none;display:grid;place-items:center;font-size:26px}
+.offer .img.g{background:linear-gradient(135deg,var(--sky-50),var(--sky-400))}
+.offer b{display:block;font-size:15px}
+.offer span{font-size:12px}
+.tabbar{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:10px 6px 18px;background:var(--bg);border-top:1px solid var(--border);font-size:11px;font-weight:600}
+.tabbar div{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 10px;border-radius:999px;color:var(--text-muted)}
+.tabbar .on{background:var(--bg-tint);color:var(--text)}
+.tabbar svg{width:22px;height:22px}
+.field label{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
+.field input{width:100%;height:48px;border-radius:16px;border:1.5px solid var(--border);padding:0 14px;font:16px var(--ui);color:var(--navy-900)}
+.field input:focus,.field input.f{outline:none;border:2px solid var(--sky-400)}
+.otp{display:flex;gap:8px;margin-top:8px}
+.otp span{width:44px;height:52px;border-radius:14px;border:1.5px solid var(--border);display:grid;place-items:center;font-weight:700;font-size:20px}
+.otp span.f{border:2px solid var(--sky-400)}
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.do,.dont{border-radius:20px;padding:16px}
+.do{background:#EEF6E7}.dont{background:#FDECEA}
+.do h4,.dont h4{margin:0 0 8px}
+.do h4{color:var(--leaf-800)}.dont h4{color:var(--red-700)}
+.do ul,.dont ul{margin:0;padding-left:18px;font-size:14px}
+.ok{color:var(--leaf-800);font-weight:700}.no{color:var(--red-700);font-weight:700}
+@media (max-width:640px){.type-row{grid-template-columns:1fr}.do-dont{grid-template-columns:1fr}section{padding:20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <svg class="cloud" viewBox="0 0 220 90" aria-hidden="true"><path d="M30 70c-16 0-22-20-6-26 0-18 22-26 34-14 8-20 40-22 50-2 14-12 38-4 36 14 20 0 24 28 4 28z" fill="#fff" stroke="#5B4636" stroke-width="3" stroke-linejoin="round"/><path d="M40 66h110" stroke="#6BCAFA" stroke-width="6" stroke-linecap="round" opacity=".7"/></svg>
+  <h1>MiwaCare · UI Guideline</h1>
+  <p>Hệ thống giao diện cho app thành viên MiwaCare. Màu lấy từ <b>Design &amp; Brand Guidelines 2023 – Dale &amp; Cecil – MIWAKO Series</b>; font <b>Open Sans</b> (giao diện) + <b>Comfortaa</b> (điểm nhấn thương hiệu). Chi tiết: <code>docs/05-tieu-chuan-thiet-ke.md</code> · token: <code>design/tokens.json</code>.</p>
+</header>
+
+<section>
+  <h2>1. Bảng màu gốc của thương hiệu</h2>
+  <p class="sub">Không được đổi mã. Màu pastel dùng làm nền và mảng màu; chữ trên nền pastel luôn là navy.</p>
+  <p><b>MIWAKO</b> <span class="tag">màu chủ đạo</span></p>
+  <div class="grid sw-grid" id="sw-miwako"></div>
+  <p style="margin-top:20px"><b>MIWAKO A+</b> <span class="tag">thưởng · hạng · ưu đãi</span></p>
+  <div class="grid sw-grid" id="sw-aplus"></div>
+  <p style="margin-top:20px"><b>Màu bổ sung để dễ đọc</b> <span class="tag d">dẫn xuất, không thuộc guideline gốc</span></p>
+  <div class="grid sw-grid" id="sw-derived"></div>
+</section>
+
+<section>
+  <h2>2. Cặp màu chữ / nền được phép</h2>
+  <p class="sub">Chuẩn WCAG AA: chữ thường ≥ 4.5:1. Tỷ lệ tính trực tiếp trong trang.</p>
+  <table id="pairs"><thead><tr><th>Mẫu</th><th>Chữ</th><th>Nền</th><th>Tương phản</th><th>Dùng cho</th></tr></thead><tbody></tbody></table>
+</section>
+
+<section>
+  <h2>3. Chữ</h2>
+  <p class="sub">Open Sans cho giao diện (đọc tốt ở cỡ nhỏ, đủ dấu tiếng Việt). Comfortaa Bold chỉ dùng cỡ ≥ 20 cho điểm nhấn thương hiệu.</p>
+  <div class="type-row"><code>display · Comfortaa 32/40</code><div style="font:700 32px/40px var(--brand)">1.250 điểm</div></div>
+  <div class="type-row"><code>titleBrand · Comfortaa 24/32</code><div style="font:700 24px/32px var(--brand)">Chào bạn Lan, chúc một ngày khoẻ mạnh!</div></div>
+  <div class="type-row"><code>h1 · Open Sans 24/32 Bold</code><div style="font:700 24px/32px var(--ui)">Lịch sử tích điểm</div></div>
+  <div class="type-row"><code>h2 · 20/28 Bold</code><div style="font:700 20px/28px var(--ui)">Ưu đãi dành riêng cho bạn</div></div>
+  <div class="type-row"><code>h3 · 17/24 SemiBold</code><div style="font:600 17px/24px var(--ui)">Giảm 50.000đ cho đơn từ 500.000đ</div></div>
+  <div class="type-row"><code>body · 16/24</code><div style="font:400 16px/24px var(--ui)">Sữa hạt hữu cơ giúp bé tiêu hoá êm, ngủ ngon và phát triển khoẻ mạnh mỗi ngày. Quý khách vui lòng xuất trình mã thành viên khi thanh toán.</div></div>
+  <div class="type-row"><code>bodySm · 14/20</code><div style="font:400 14px/20px var(--ui);color:var(--ink-muted)">Điểm được cập nhật tự động sau mỗi đơn hàng tại cửa hàng.</div></div>
+  <div class="type-row"><code>label · 15/20 SemiBold</code><div style="font:600 15px/20px var(--ui)">Xem thẻ thành viên</div></div>
+  <div class="type-row"><code>caption · 12/16</code><div style="font:400 12px/16px var(--ui);color:var(--ink-muted)">Cập nhật lúc 14:05 · 25/11/2026</div></div>
+  <div class="type-row"><code>Kiểm tra dấu</code><div><div style="font:400 18px/28px var(--ui)">Ầ Ẩ Ẫ Ấ Ậ Ằ Ẳ Ẵ Ắ Ặ Ề Ể Ễ Ế Ệ Ồ Ổ Ỗ Ố Ộ Ờ Ở Ỡ Ớ Ợ Ừ Ử Ữ Ứ Ự Ỳ Ỷ Ỹ Ý Ỵ đ Đ</div><div style="font:700 22px/32px var(--brand)">Ầ Ẩ Ẫ Ấ Ậ Ề Ể Ễ Ế Ệ Ồ Ổ Ỗ Ố Ộ Ừ Ử Ữ Ứ Ự đ Đ</div></div></div>
+</section>
+
+<section>
+  <h2>4. Thẻ thành viên theo hạng</h2>
+  <p class="sub">Tên hạng là ví dụ; chờ tên hạng thật từ Pancake. Vùng mã luôn nền trắng, mã đen.</p>
+  <div class="mini-cards">
+    <div class="card t1"><div class="row"><span class="brand">MIWAKO</span><span class="tier">Thành viên</span></div><div class="pts"><span class="sun">☀</span> 320 điểm</div><div class="muted" style="font-size:13px;color:var(--navy-900)">Còn 180 điểm để lên Hạng Bạc</div><div class="prog"><i style="width:64%"></i></div><div class="code"><div class="bars"></div><small>0912 345 678</small></div></div>
+    <div class="card t2"><div class="row"><span class="brand">MIWAKO</span><span class="tier">Hạng Bạc</span></div><div class="pts"><span class="sun">☀</span> 820 điểm</div><div style="font-size:13px">Còn 180 điểm để lên Hạng Vàng</div><div class="prog"><i style="width:82%"></i></div><div class="code"><div class="bars"></div><small>0912 345 678</small></div></div>
+    <div class="card t3"><div class="row"><span class="brand">MIWAKO</span><span class="tier">Hạng Vàng</span></div><div class="pts">1.250 điểm</div><div style="font-size:13px">Còn 750 điểm để lên Hạng Kim Cương</div><div class="prog"><i style="width:62%"></i></div><div class="code"><div class="bars"></div><small>0912 345 678</small></div></div>
+    <div class="card t4"><div class="row"><span class="brand">MIWAKO</span><span class="tier">Kim Cương</span></div><div class="pts"><span class="sun">☀</span> 2.480 điểm</div><div style="font-size:13px">Bạn đang ở hạng cao nhất</div><div class="prog"><i style="width:100%"></i></div><div class="code"><div class="bars"></div><small>0912 345 678</small></div></div>
+  </div>
+</section>
+
+<section>
+  <h2>5. Nút, nhãn điểm, ô nhập</h2>
+  <p class="sub">Mỗi màn hình chỉ một nút primary. Nút cao 52 (lớn) / 44 (vừa), bo tròn hoàn toàn.</p>
+  <div class="btns">
+    <button class="btn b-primary">Tiếp tục</button>
+    <button class="btn b-brand">Bắt đầu</button>
+    <button class="btn b-reward">Xem ưu đãi</button>
+    <button class="btn b-sec">Để sau</button>
+    <button class="btn b-ghost">Xem tất cả</button>
+    <button class="btn b-danger">Xoá tài khoản</button>
+  </div>
+  <div class="btns" style="margin-top:16px">
+    <span class="badge plus">+25 điểm</span><span class="badge minus">−100 điểm</span><span class="badge warn">Còn 2 ngày</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:20px">
+    <div class="field"><label>Số điện thoại</label><input class="f" value="0912 345 678" aria-label="Số điện thoại"></div>
+    <div class="field"><label>Mã xác nhận</label><div class="otp"><span>4</span><span>8</span><span>1</span><span class="f">|</span><span></span><span></span></div></div>
+  </div>
+</section>
+
+<section>
+  <h2>6. Màn hình mẫu: Trang chủ (sáng / tối)</h2>
+  <p class="sub">Minh hoạ cách các token kết hợp trên màn hình thật.</p>
+  <div class="phones">
+    <div class="phone" id="ph-light"></div>
+    <div class="phone dark" id="ph-dark"></div>
+  </div>
+</section>
+
+<section>
+  <h2>7. Nên / Không nên</h2>
+  <div class="do-dont">
+    <div class="do"><h4>Nên</h4><ul>
+      <li>Chữ navy trên mọi nền pastel (trời, cỏ, nắng)</li>
+      <li>Vàng nắng chỉ cho điểm thưởng, ưu đãi, hạng cao</li>
+      <li>Bo góc lớn, nhiều khoảng trắng, mây trang trí nhẹ</li>
+      <li>Comfortaa cho số điểm, lời chào, tên hạng (cỡ ≥ 20)</li>
+      <li>Vùng mã vạch luôn nền trắng</li>
+    </ul></div>
+    <div class="dont"><h4>Không nên</h4><ul>
+      <li>Chữ trắng trên <code>#6BCAFA</code>, <code>#84BB60</code>, <code>#F2BE21</code> (dưới 2.3:1)</li>
+      <li>Hơn 2 màu nhấn trên một màn hình</li>
+      <li>Comfortaa cho đoạn văn hay chữ nhỏ</li>
+      <li>Font vẽ tay (Dom Casual, Bubble Bobble) cho chữ giao diện</li>
+      <li>Viết HOA cả câu dài tiếng Việt</li>
+    </ul></div>
+  </div>
+</section>
+
+</div>
+
+<script>
+const sw=(id,list)=>{document.getElementById(id).innerHTML=list.map(([n,h,role,dark])=>`<div class="sw"><div class="c" style="background:${h};color:${dark?'#fff':'#15234B'}">${h}</div><div class="m"><b>${n}</b>${role}</div></div>`).join('')};
+sw('sw-miwako',[["white","#FFFFFF","Trắng mây"],["sky.50","#D1EEFC","Nền thương hiệu"],["sky.100","#ABE7FF","Nền nhấn"],["sky.400","#6BCAFA","Màu nhận diện"],["navy.900","#15234B","Chữ, nút chính",1],["lemon.50","#FCFBA9","Nắng nhạt"],["lemon.100","#FBFB8A","Nắng"],["leaf.200","#AED283","Cỏ non"],["leaf.400","#84BB60","Đồi cỏ"]]);
+sw('sw-aplus',[["sun.50","#FFFBB0","Nền cảnh báo nhẹ"],["sun.75","#EFEFB4",""],["sun.100","#F2DFA8",""],["sun.300","#F1BC63","Minh hoạ ưu đãi"],["sun.400","#F2BE21","Nút thưởng, icon điểm"],["sun.500","#F7A231","Cảnh báo (tối)"],["sun.700","#D09F2A",""]]);
+sw('sw-derived',[["sky.800","#0A5E8E","Link",1],["leaf.800","#336419","+điểm, thành công",1],["amber.800","#8A5A00","Cảnh báo",1],["red.700","#B42318","Lỗi, −điểm",1],["ink.muted","#4A5677","Chữ phụ",1],["navy.950","#0B1430","Nền tối",1],["navy.800","#1E2F5E","Bề mặt tối",1],["ink.mutedDark","#A9B4D0","Chữ phụ (tối)"]]);
+const lum=h=>{h=h.slice(1);return[0,2,4].map(i=>parseInt(h.substr(i,2),16)/255).map(x=>x<=.03928?x/12.92:((x+.055)/1.055)**2.4).reduce((s,v,i)=>s+v*[.2126,.7152,.0722][i],0)};
+const cr=(a,b)=>{const[x,y]=[lum(a),lum(b)].sort((p,q)=>q-p);return(x+.05)/(y+.05)};
+const pairs=[["#15234B","#FFFFFF","Chữ chính"],["#4A5677","#FFFFFF","Chữ phụ"],["#0A5E8E","#FFFFFF","Link"],["#FFFFFF","#15234B","Nút primary"],["#15234B","#6BCAFA","Nút brand"],["#15234B","#F2BE21","Nút reward"],["#15234B","#84BB60","Thẻ hạng 2"],["#336419","#EEF6E7","+điểm"],["#B42318","#FDECEA","−điểm, lỗi"],["#8A5A00","#FFFBB0","Cảnh báo"],["#FFFFFF","#0B1430","Chữ (tối)"],["#A9B4D0","#15234B","Chữ phụ (tối)"],["#FFFFFF","#6BCAFA","KHÔNG DÙNG"],["#FFFFFF","#84BB60","KHÔNG DÙNG"]];
+document.querySelector('#pairs tbody').innerHTML=pairs.map(([f,b,u])=>{const r=cr(f,b);const ok=r>=4.5;return`<tr><td><span style="display:inline-block;padding:6px 12px;border-radius:10px;background:${b};color:${f};font-weight:600;border:1px solid #E6EEF4">Aa Điểm</span></td><td>${f}</td><td>${b}</td><td class="${ok?'ok':'no'}">${r.toFixed(2)}:1 ${ok?'✓':'✗'}</td><td>${u}</td></tr>`}).join('');
+const icon=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const ic={home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',card:'<rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.6-1.4 1.8-2 3-2s2.4.6 3 2M15 10h3M15 13h3"/>',ticket:'<path d="M3 8a2 2 0 0 0 0 4v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4a2 2 0 0 0 0-4V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/><path d="m9 14 6-6M9.5 8.5h.01M14.5 13.5h.01"/>',inbox:'<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',user:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.2 18.4a7 7 0 0 1 11.6 0"/>'};
+const home=`<div class="status"><span>9:41</span><span>●●● 5G ▮</span></div>
+<div class="muted" style="font-size:13px">Thứ Ba, 25/11</div>
+<div class="hello">Chào bạn Lan 👋</div>
+<div class="card t3"><div class="row"><span class="brand">MIWAKO</span><span class="tier">Hạng Vàng</span></div><div class="pts">1.250 điểm</div><div style="font-size:13px">Còn 750 điểm để lên Kim Cương</div><div class="prog"><i style="width:62%"></i></div><div class="code"><div class="bars" style="height:34px"></div><small>Chạm để phóng to mã</small></div></div>
+<div class="section-title"><span>Ưu đãi cho bạn</span><a href="#">Xem tất cả</a></div>
+<div class="offer"><div class="img">🎁</div><div><b>Giảm 50.000đ</b><span class="muted">Đơn từ 500.000đ · HSD 30/11</span><div style="margin-top:4px"><span class="badge warn" style="font-size:11px;padding:2px 8px">Còn 5 ngày</span></div></div></div>
+<div class="offer"><div class="img g">🥛</div><div><b>Tặng 1 hộp Miwako 180ml</b><span class="muted">Khi mua lon 700g · Hạng Vàng</span></div></div>
+<div class="section-title"><span>Hoạt động gần đây</span></div>
+<div class="row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0 90px"><span style="font-size:14px">Đơn hàng 24/11<br><span class="muted" style="font-size:12px">Cửa hàng Cầu Giấy</span></span><span class="badge plus">+25 điểm</span></div>
+<nav class="tabbar"><div class="on">${icon(ic.home)}Trang chủ</div><div>${icon(ic.card)}Thẻ</div><div>${icon(ic.ticket)}Ưu đãi</div><div>${icon(ic.inbox)}Hộp thư</div><div>${icon(ic.user)}Tài khoản</div></nav>`;
+document.getElementById('ph-light').innerHTML=home;document.getElementById('ph-dark').innerHTML=home;
+</script>
+</body>
+</html>

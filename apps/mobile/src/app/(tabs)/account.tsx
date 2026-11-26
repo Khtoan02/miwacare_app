@@ -1,0 +1,129 @@
+import Constants from 'expo-constants';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+import { ChevronRight, History, LifeBuoy, LogOut, MapPin, ShieldCheck, Trash2, User } from 'lucide-react-native';
+import { useState, type ReactNode } from 'react';
+import { Alert, Pressable, StyleSheet, Switch, View } from 'react-native';
+
+import { useMembership } from '@/data/hooks';
+import { useAuth } from '@/features/auth/AuthContext';
+import { t } from '@/i18n/vi';
+import { prettyPhone } from '@/lib/format';
+import { palette, radius, space, tier, useTheme } from '@/theme';
+import { AppText } from '@/ui/AppText';
+import { Card, Screen } from '@/ui/kit';
+
+function Row({ icon, label, onPress, danger, last }: { icon: ReactNode; label: string; onPress: () => void; danger?: boolean; last?: boolean }) {
+  const { color } = useTheme();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      style={({ pressed }) => [styles.row, !last && { borderBottomWidth: 1, borderBottomColor: color.border }, pressed && { backgroundColor: color.bgTint }]}>
+      {icon}
+      <AppText variant="bodyStrong" color={danger ? 'dangerText' : 'text'} style={{ flex: 1, fontSize: 15 }}>
+        {label}
+      </AppText>
+      {!danger && <ChevronRight size={18} color={color.textMuted} />}
+    </Pressable>
+  );
+}
+
+function ToggleRow({ label, hint, value, onChange }: { label: string; hint: string; value: boolean; onChange: (v: boolean) => void }) {
+  const { color } = useTheme();
+  return (
+    <View style={[styles.row, { minHeight: 60, borderBottomWidth: 1, borderBottomColor: color.border }]}>
+      <View style={{ flex: 1 }}>
+        <AppText variant="bodyStrong" style={{ fontSize: 15 }}>
+          {label}
+        </AppText>
+        <AppText variant="caption" color="textMuted">
+          {hint}
+        </AppText>
+      </View>
+      <Switch
+        accessibilityLabel={label}
+        value={value}
+        onValueChange={onChange}
+        trackColor={{ true: color.actionPrimaryBg, false: color.border }}
+        thumbColor="#FFFFFF"
+      />
+    </View>
+  );
+}
+
+export default function Account() {
+  const { color } = useTheme();
+  const { signOut } = useAuth();
+  const { member, progress } = useMembership();
+  const [pushPoints, setPushPoints] = useState(true);
+  const [pushPromo, setPushPromo] = useState(false);
+  const soon = () => Alert.alert(t.account.comingSoon);
+  const ic = color.text;
+  const tc = progress ? tier[progress.current.colorKey] : null;
+
+  return (
+    <Screen style={{ gap: space.lg, paddingTop: space.lg }}>
+      {member && (
+        <View style={[styles.profile, { backgroundColor: color.bgTint }]}>
+          <View style={[styles.avatar, { backgroundColor: palette.brand.sky['400'] }]}>
+            <AppText variant="h2" rawColor={palette.brand.navy['900']} style={{ fontFamily: 'Comfortaa_700Bold' }}>
+              {member.fullName.split(' ').slice(-2).map((w) => w[0]).join('')}
+            </AppText>
+          </View>
+          <View style={{ flex: 1 }}>
+            <AppText variant="h3" style={{ fontFamily: 'OpenSans_700Bold' }}>
+              {member.fullName}
+            </AppText>
+            <AppText variant="bodySm" color="textMuted">
+              {prettyPhone(member.phone)}
+            </AppText>
+          </View>
+          {progress && tc && (
+            <LinearGradient colors={[tc.from, tc.to]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.tier}>
+              <AppText variant="caption" rawColor={tc.text} style={{ fontFamily: 'Comfortaa_700Bold' }}>
+                {progress.current.name}
+              </AppText>
+            </LinearGradient>
+          )}
+        </View>
+      )}
+
+      <Card style={{ overflow: 'hidden' }}>
+        <Row icon={<User size={20} color={ic} />} label={t.account.profile} onPress={soon} />
+        <Row icon={<MapPin size={20} color={ic} />} label={t.account.stores} onPress={soon} />
+        <Row icon={<History size={20} color={ic} />} label={t.account.pointsHistory} onPress={() => router.push('/points')} last />
+      </Card>
+
+      <Card style={{ overflow: 'hidden' }}>
+        <ToggleRow label={t.account.pushPoints} hint={t.account.pushPointsHint} value={pushPoints} onChange={setPushPoints} />
+        <ToggleRow label={t.account.pushPromo} hint={t.account.pushPromoHint} value={pushPromo} onChange={setPushPromo} />
+        <Row icon={<ShieldCheck size={20} color={ic} />} label={t.account.privacy} onPress={soon} last />
+      </Card>
+
+      <Card style={{ overflow: 'hidden' }}>
+        <Row icon={<LifeBuoy size={20} color={ic} />} label={t.account.support} onPress={soon} />
+        <Row
+          icon={<LogOut size={20} color={ic} />}
+          label={t.account.signOut}
+          onPress={async () => {
+            await signOut();
+            router.replace('/login');
+          }}
+        />
+        <Row icon={<Trash2 size={20} color={color.dangerText} />} label={t.account.deleteAccount} onPress={soon} danger last />
+      </Card>
+
+      <AppText variant="caption" color="textMuted" align="center">
+        {t.account.version(Constants.expoConfig?.version ?? '1.0.0')}
+      </AppText>
+    </Screen>
+  );
+}
+
+const styles = StyleSheet.create({
+  profile: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 16, borderRadius: radius.lg },
+  avatar: { width: 60, height: 60, borderRadius: radius.full, alignItems: 'center', justifyContent: 'center' },
+  tier: { paddingHorizontal: 10, paddingVertical: 6, borderRadius: radius.full },
+  row: { flexDirection: 'row', alignItems: 'center', gap: space.md, minHeight: 52, paddingHorizontal: 16 },
+});
