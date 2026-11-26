@@ -30,7 +30,9 @@
 - `supabase/migrations/`: schema + RLS; `supabase/seed.sql`: dữ liệu mẫu. Đã áp lên dự án Supabase `miwacare` (ref `rbvbytqpsfqbspfnditx`, Singapore, Free) ngày 2026-11-26 bằng `npx supabase@latest db push --remote`. URL + khoá publishable nằm trong `.env`; khoá secret và mật khẩu DB không lưu trong repo.
 - `apps/admin/`: trang quản trị Vite + React (Cloudflare Pages) — xem `apps/admin/README.md`. Dùng chung hàm tính điểm `apps/mobile/src/domain`. Chạy trên dữ liệu mẫu; khi nối Supabase chỉ sửa `src/data/api.ts`.
 - `supabase/functions/admin`: Edge Function cho mọi thao tác ghi của trang quản trị; `supabase/functions/_shared` là bản sao tự sinh của `apps/mobile/src/domain` (chạy `node scripts/sync-shared.mjs`). Trang quản trị đã nối Supabase (đăng nhập bằng link email, vai từ `admin_users`).
-- Chưa có: nối app di động với Supabase, đăng nhập OTP cho khách, deploy trang quản trị lên Cloudflare Pages.
+- Trang quản trị chạy ở https://miwacare-admin.pages.dev (Cloudflare Pages project `miwacare-admin`, nối GitHub, tự build nhánh `feat/admin-skeleton`, thư mục `apps/admin`, biến `EXPO_PUBLIC_SUPABASE_URL/ANON_KEY` + `NODE_VERSION=22`). Supabase Site URL trỏ về địa chỉ này; redirect cho phép thêm `http://localhost:5174`. Khi gộp vào `main` thì đổi Production branch trong Cloudflare.
+- App di động đã nối Supabase (bật bằng `apps/mobile/.env`, xem `apps/mobile/README.md`): đăng nhập SĐT + OTP với số test `0900000001`/`0900000002` mã `123456`; hook `hook_send_sms` chặn số thật cho tới khi có Zalo ZNS. Edge Function `member` (onboard, claimCode) cho thao tác ghi của khách.
+- Chưa có: gửi OTP thật (Zalo ZNS), màn khách tự nhập tên / ngày sinh, thông báo đẩy, kiểm thử trên điện thoại thật (Expo Go / EAS).
 
 ## Quy ước kỹ thuật
 - Expo SDK mới nhất, TypeScript strict, Expo Router cho điều hướng.

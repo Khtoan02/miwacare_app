@@ -3,7 +3,7 @@ import { Check } from 'lucide-react-native';
 import { useState } from 'react';
 import { Image, KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
-import { api } from '@/data/api';
+import { api, IS_MOCK } from '@/data/api';
 import { t } from '@/i18n/vi';
 import { normalizeVnPhone } from '@/lib/format';
 import { radius, shadow, space, useTheme } from '@/theme';
@@ -44,7 +44,7 @@ export default function Login() {
       // Đồng ý nhận tin (marketing) được ghi vào bảng consents sau khi xác thực OTP.
       router.push({ pathname: '/otp', params: { phone: normalized, marketing: marketing ? '1' : '0' } });
     } catch {
-      setError(t.common.loadError);
+      setError(IS_MOCK ? t.common.loadError : t.auth.sendFailed);
     } finally {
       setLoading(false);
     }

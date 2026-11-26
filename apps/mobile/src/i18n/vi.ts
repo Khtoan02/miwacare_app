@@ -8,6 +8,7 @@ export const vi = {
     loadError: 'Chưa tải được dữ liệu. Kiểm tra mạng rồi thử lại.',
     seeAll: 'Xem tất cả',
     mockBadge: 'Dữ liệu mẫu',
+    memberFallbackName: 'Khách hàng', // khi khách chưa nhập tên (màn chào lấy 2 chữ cuối)
   },
   auth: {
     hello: 'Chào bạn!',
@@ -24,6 +25,8 @@ export const vi = {
     otpTitle: 'Nhập mã xác thực',
     otpSentTo: (phone: string) => `Mã 6 số đã gửi đến ${phone} qua tin nhắn.`,
     otpDevHint: 'Đang dùng dữ liệu mẫu: nhập 123456',
+    otpTestHint: 'Giai đoạn thử nghiệm: chỉ số điện thoại test nhận được mã.',
+    sendFailed: 'Chưa gửi được mã. Giai đoạn thử nghiệm chỉ hỗ trợ số điện thoại test.',
     otpInvalid: 'Mã chưa đúng. Kiểm tra lại tin nhắn.',
     resendIn: (s: number) => `Gửi lại sau 00:${String(s).padStart(2, '0')}`,
     resend: 'Gửi lại mã',
@@ -59,6 +62,15 @@ export const vi = {
     title: 'Ưu đãi',
     tabs: { mine: 'Của bạn', redeem: 'Đổi điểm', event: 'Sự kiện' },
     empty: 'Chưa có ưu đãi nào ở mục này.',
+    ongoing: 'Đang diễn ra',
+    enoughPoints: 'Đủ điểm',
+    notEnough: 'Chưa đủ',
+    lack: (p: string) => `Còn thiếu ${p} điểm`,
+    daysLeft: (d: number) => `Còn ${d} ngày`,
+    until: (dm: string) => `Đến ${dm}`,
+    ctaUse: 'Cách dùng',
+    ctaRedeem: 'Cách đổi',
+    ctaDetail: 'Chi tiết',
   },
   orders: {
     title: 'Đơn hàng',

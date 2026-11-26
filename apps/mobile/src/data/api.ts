@@ -1,63 +1,52 @@
 // Lớp truy cập dữ liệu. Màn hình chỉ gọi các hàm ở đây, không biết dữ liệu đến từ đâu.
-// EXPO_PUBLIC_DATA_SOURCE = 'mock' (mặc định) | 'supabase' (làm ở bước sau).
+// EXPO_PUBLIC_DATA_SOURCE = 'mock' (mặc định, dữ liệu mẫu bên dưới) | 'supabase' (api.remote.ts).
 import type { ClaimResult, LedgerEntry, LoyaltyRuleVersion, Member, Offer, Order } from '@/domain/types';
+import { DATA_SOURCE } from '@/lib/supabase';
+import { remoteApi } from './api.remote';
 import { mockLedger, mockMember, mockOffers, mockOrders, mockProgramCodes, mockRules, MOCK_OTP } from './mock';
-
-const source = process.env.EXPO_PUBLIC_DATA_SOURCE ?? 'mock';
 
 function delay<T>(value: T, ms = 350): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms));
 }
 
-function notYet(): never {
-  throw new Error('Nguồn dữ liệu Supabase chưa được nối. Đặt EXPO_PUBLIC_DATA_SOURCE=mock.');
-}
-
 const claimed = new Set<string>();
 let wrongAttempts: number[] = [];
 
-export const api = {
+const mockApi = {
   async sendOtp(phone: string): Promise<void> {
-    if (source !== 'mock') notYet();
     void phone;
     await delay(undefined, 500);
   },
 
-  async verifyOtp(phone: string, code: string): Promise<{ token: string }> {
-    if (source !== 'mock') notYet();
+  async verifyOtp(phone: string, code: string, marketing?: boolean): Promise<{ token: string }> {
+    void marketing;
     await delay(undefined, 500);
     if (code !== MOCK_OTP) throw new Error('otp_invalid');
     return { token: `mock-token-${phone}` };
   },
 
   async getMe(): Promise<Member> {
-    if (source !== 'mock') notYet();
     return delay({ ...mockMember });
   },
 
   async getRules(): Promise<LoyaltyRuleVersion[]> {
-    if (source !== 'mock') notYet();
     return delay(mockRules, 100);
   },
 
   async getLedger(): Promise<LedgerEntry[]> {
-    if (source !== 'mock') notYet();
     return delay(mockLedger);
   },
 
   async getOrders(): Promise<Order[]> {
-    if (source !== 'mock') notYet();
     return delay(mockOrders);
   },
 
   async getOffers(): Promise<Offer[]> {
-    if (source !== 'mock') notYet();
     return delay(mockOffers);
   },
 
   /** Kiểm tra mã chương trình (sau này là Edge Function `program-claim`). */
   async claimProgramCode(raw: string): Promise<ClaimResult> {
-    if (source !== 'mock') notYet();
     await delay(undefined, 600);
     const now = Date.now();
     wrongAttempts = wrongAttempts.filter((t) => now - t < 10 * 60_000);
@@ -79,3 +68,7 @@ export const api = {
     };
   },
 };
+
+// Hai bản phải cùng chữ ký: sai lệch sẽ báo lỗi khi typecheck.
+export const api: typeof mockApi = DATA_SOURCE === 'supabase' ? remoteApi : mockApi;
+export const IS_MOCK = DATA_SOURCE === 'mock';

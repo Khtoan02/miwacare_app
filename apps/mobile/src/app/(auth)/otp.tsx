@@ -3,7 +3,7 @@ import { ShieldCheck } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
-import { api } from '@/data/api';
+import { api, IS_MOCK } from '@/data/api';
 import { useAuth } from '@/features/auth/AuthContext';
 import { t } from '@/i18n/vi';
 import { prettyPhone } from '@/lib/format';
@@ -17,7 +17,7 @@ const LEN = 6;
 export default function Otp() {
   const { color } = useTheme();
   const { signIn } = useAuth();
-  const { phone = '' } = useLocalSearchParams<{ phone: string; marketing: string }>();
+  const { phone = '', marketing } = useLocalSearchParams<{ phone: string; marketing: string }>();
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -35,7 +35,7 @@ export default function Otp() {
     setLoading(true);
     setError(null);
     try {
-      const { token } = await api.verifyOtp(phone, value);
+      const { token } = await api.verifyOtp(phone, value, marketing === '1');
       await signIn(token);
       router.replace('/(tabs)');
     } catch {
@@ -48,7 +48,8 @@ export default function Otp() {
 
   async function resend() {
     setSeconds(60);
-    await api.sendOtp(phone);
+    setError(null);
+    await api.sendOtp(phone).catch(() => setError(IS_MOCK ? t.common.loadError : t.auth.sendFailed));
   }
 
   return (
@@ -61,7 +62,7 @@ export default function Otp() {
           </AppText>
           <AppText color="textMuted">{t.auth.otpSentTo(prettyPhone(phone))}</AppText>
           <AppText variant="caption" color="textLink">
-            {t.auth.otpDevHint}
+            {IS_MOCK ? t.auth.otpDevHint : t.auth.otpTestHint}
           </AppText>
         </View>
 
