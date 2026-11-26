@@ -21,7 +21,8 @@ export function ruleAt(versions: LoyaltyRuleVersion[], at: string): LoyaltyRuleV
 export function earnedPoints(order: OrderForPoints, tierId: string, rule: LoyaltyRuleVersion): number {
   const base = rule.earn.base === 'after_discount' ? order.subtotal - order.discount : order.subtotal;
   if (base <= 0 || rule.earn.amountPerPoint <= 0) return 0;
-  const weekday = new Date(order.at).getDay() as 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  // Ngày trong tuần theo giờ Việt Nam (UTC+7), không theo múi giờ của máy chạy code (server chạy UTC).
+  const weekday = new Date(new Date(order.at).getTime() + 7 * 3_600_000).getUTCDay() as 0 | 1 | 2 | 3 | 4 | 5 | 6;
   const factor = (rule.tierMultipliers[tierId] ?? 1) * (rule.weekdayMultipliers[weekday] ?? 1);
   const raw = (base / rule.earn.amountPerPoint) * factor;
   return Math[rule.earn.rounding](raw);

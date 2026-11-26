@@ -15,12 +15,13 @@ import {
 import { useState } from 'react';
 import { Navigate, NavLink, Outlet, useLocation } from 'react-router';
 
-import { resetMockData } from '@/data/api';
+import { resetMockData } from '@/data/api.mock';
 import { useAuth } from '@/lib/auth';
 import { roleLabel } from '@/lib/labels';
-import { Badge, Button } from '@/ui/kit';
+import { Badge, Button, Loading } from '@/ui/kit';
 import type { Role } from '@/data/types';
 import { ask, IS_DEMO } from '@/lib/env';
+import { USE_MOCK } from '@/lib/supabase';
 
 const NAV = [
   { group: 'Khách hàng', items: [
@@ -44,7 +45,7 @@ const LATER = [
 ];
 
 export function Layout() {
-  const { session, logout, switchRole } = useAuth();
+  const { session, ready, logout, switchRole } = useAuth();
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const [lastPath, setLastPath] = useState(pathname);
@@ -53,6 +54,7 @@ export function Layout() {
     setOpen(false);
   }
 
+  if (!ready) return <Loading />;
   if (!session) return <Navigate to="/login" replace />;
 
   return (
@@ -119,6 +121,7 @@ export function Layout() {
             </>
           )}
         </header>
+        {USE_MOCK && (
         <div className="mock-banner">
           {IS_DEMO ? 'BẢN DEMO — dữ liệu mẫu, không có dữ liệu thật. Thay đổi chỉ lưu trên trình duyệt của bạn.' : 'Đang dùng DỮ LIỆU MẪU — chưa nối Supabase. Mọi thay đổi chỉ lưu trên trình duyệt này.'}{' '}
           <button
@@ -132,6 +135,7 @@ export function Layout() {
             Khôi phục dữ liệu mẫu
           </button>
         </div>
+        )}
         <main className="content">
           <Outlet />
         </main>

@@ -9,6 +9,9 @@ export default defineConfig(({ mode }) => ({
   // Bản demo đăng lên link riêng tư → đường dẫn tương đối
   base: mode === 'demo' ? './' : '/',
   plugins: [react()],
+  // Đọc .env ở gốc repo, chỉ lấy biến công khai (URL + khoá publishable Supabase, dùng chung với app).
+  envDir: r('../..'),
+  envPrefix: ['VITE_', 'EXPO_PUBLIC_'],
   resolve: {
     alias: {
       '@': r('./src'),

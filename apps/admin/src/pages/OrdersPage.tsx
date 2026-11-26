@@ -164,7 +164,10 @@ function NewOrderDialog({ open, onClose }: { open: boolean; onClose: () => void 
   const toast = useToast();
   const [f, setF] = useState<OrderInput>(emptyOrder);
   const set = <K extends keyof OrderInput>(k: K, v: OrderInput[K]) => setF((x) => ({ ...x, [k]: v }));
-  const p = previewOrder(f);
+  // Xem trước tính trên server (bản thật) → chờ người dùng gõ xong rồi mới hỏi.
+  const pq = useDeferredValue({ phone: f.phone, orderedAt: f.orderedAt, subtotal: f.subtotal, discount: f.discount });
+  const preview = useQuery({ queryKey: ['preview-order', pq], queryFn: () => previewOrder(pq), enabled: open && pq.phone.length >= 9, staleTime: 15_000 });
+  const p = preview.data ?? { phone: null, member: null, points: 0, ruleVersion: null };
   const mut = useMutation({
     mutationFn: () => createOrder(f),
     onSuccess: (r) => {
@@ -222,7 +225,7 @@ function NewOrderDialog({ open, onClose }: { open: boolean; onClose: () => void 
       <Field label="Sản phẩm">
         <input className="input" value={f.items} onChange={(e) => set('items', e.target.value)} placeholder="Sữa MIWAKO 700g × 2" />
       </Field>
-      {f.phone.length >= 9 && (
+      {f.phone.length >= 9 && preview.isFetched && (
         <div className={`alert ${p.member ? 'success' : 'warning'}`}>
           {p.member ? (
             <>
@@ -270,7 +273,12 @@ function ImportDialog({ open, onClose }: { open: boolean; onClose: () => void })
     const r = parseOrdersCsv(await file.text());
     setError(r.error);
     setRows(r.rows);
-    setChecked(r.error ? [] : checkImport(r.rows));
+    try {
+      setChecked(r.error ? [] : await checkImport(r.rows));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+      setChecked([]);
+    }
   }
 
   function downloadTemplate() {

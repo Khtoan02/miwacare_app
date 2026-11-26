@@ -55,3 +55,12 @@ npm run build
 - Đăng nhập bằng Supabase Auth (email + mật khẩu + 2FA), vai lấy từ bảng `admin_users`.
 - Cộng điểm / nhập CSV / điều chỉnh điểm chạy trong Edge Function (dùng service_role trên server), **không** từ trình duyệt.
 - Biến môi trường trên Cloudflare Pages: chỉ `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`.
+
+## Chạy với Supabase thật (từ 2026-11-26)
+
+- Trang quản trị đọc `EXPO_PUBLIC_SUPABASE_URL` và `EXPO_PUBLIC_SUPABASE_ANON_KEY` trong `.env` ở gốc repo (chỉ khoá publishable, công khai). Có hai biến này → dùng dữ liệu thật; thiếu, hoặc build `--mode demo`, hoặc `VITE_DATA=mock` → dùng dữ liệu mẫu.
+- Đăng nhập: nhập email đã có trong bảng `admin_users` → Supabase gửi link đăng nhập (không mật khẩu). Link mở về **Site URL** cấu hình trong Supabase › Authentication › URL Configuration (hiện là `http://localhost:5174`).
+- Đọc dữ liệu: truy vấn thẳng bảng/view, RLS chỉ cho quản trị đọc. Ghi dữ liệu: Edge Function `supabase/functions/admin` (kiểm tra vai, tính điểm bằng cùng hàm với app, ghi `audit_logs`).
+- `src/data/api.ts` chọn `api.remote.ts` hoặc `api.mock.ts`; hai bản phải cùng chữ ký hàm (lỗi biên dịch nếu lệch). Sửa quy tắc nghiệp vụ thì sửa cả Edge Function và `api.mock.ts`.
+- Sửa `apps/mobile/src/domain` hoặc `format.ts` → chạy `node scripts/sync-shared.mjs` rồi deploy lại: `npx supabase@latest functions deploy admin --use-api --no-verify-jwt`.
+- Thêm người quản trị: mời email trong Supabase › Authentication › Users, rồi thêm dòng vào `admin_users` (vai `viewer` / `editor` / `admin`).
