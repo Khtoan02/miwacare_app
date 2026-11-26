@@ -8,6 +8,9 @@ const r = (p: string) => fileURLToPath(new URL(p, import.meta.url))
 export default defineConfig(({ mode }) => ({
   // Bản demo đăng lên link riêng tư → đường dẫn tương đối
   base: mode === 'demo' ? './' : '/',
+  // Dùng một tsconfig cho mọi file (kể cả ../mobile/src): tsconfig của app di động
+  // kế thừa expo/tsconfig.base, không có khi build trên Cloudflare (chỉ cài apps/admin).
+  tsconfig: './tsconfig.app.json',
   plugins: [react()],
   // Đọc .env ở gốc repo, chỉ lấy biến công khai (URL + khoá publishable Supabase, dùng chung với app).
   envDir: r('../..'),
