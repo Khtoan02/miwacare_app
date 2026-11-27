@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "504181227382",
+    "project_id": "miwacare-5e2db",
+    "storage_bucket": "miwacare-5e2db.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504181227382:android:91f583b8849e75acda4457",
+        "android_client_info": {
+          "package_name": "vn.miwacare.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeJFJSAUl_lMUsXn4_cuLS-jnLh889ycw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

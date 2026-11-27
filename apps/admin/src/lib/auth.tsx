@@ -40,9 +40,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         const { data, error } = await sb.from('admin_users').select('role').eq('id', user.id).maybeSingle();
         if (!alive) return;
-        if (error || !data) {
+        // Vai 'writer' chỉ dùng trang quản lý blog (apps/cms), không xem dữ liệu khách.
+        if (error || !data || data.role === 'writer') {
           setSession(null);
-          setAuthError(error ? 'Không kiểm tra được quyền, thử lại sau' : 'Email này chưa được cấp quyền quản trị');
+          setAuthError(error ? 'Không kiểm tra được quyền, thử lại sau' : data?.role === 'writer' ? 'Tài khoản này chỉ dùng trang quản lý bài viết' : 'Email này chưa được cấp quyền quản trị');
           await sb.auth.signOut();
         } else {
           setAuthError(null);

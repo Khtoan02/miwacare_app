@@ -13,6 +13,9 @@ export default function MemberLayout() {
       <Stack.Screen name="points" />
       <Stack.Screen name="scan" options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom' }} />
       <Stack.Screen name="scan-result" options={{ animation: 'fade' }} />
+      <Stack.Screen name="hop-thu" />
+      <Stack.Screen name="bai-viet/index" />
+      <Stack.Screen name="bai-viet/[slug]" />
     </Stack>
   );
 }

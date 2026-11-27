@@ -32,7 +32,9 @@
 - `supabase/functions/admin`: Edge Function cho mọi thao tác ghi của trang quản trị; `supabase/functions/_shared` là bản sao tự sinh của `apps/mobile/src/domain` (chạy `node scripts/sync-shared.mjs`). Trang quản trị đã nối Supabase (đăng nhập bằng link email, vai từ `admin_users`).
 - Trang quản trị chạy ở https://miwacare-admin.pages.dev (Cloudflare Pages project `miwacare-admin`, nối GitHub, tự build nhánh `feat/admin-skeleton`, thư mục `apps/admin`, biến `EXPO_PUBLIC_SUPABASE_URL/ANON_KEY` + `NODE_VERSION=22`). Supabase Site URL trỏ về địa chỉ này; redirect cho phép thêm `http://localhost:5174`. Khi gộp vào `main` thì đổi Production branch trong Cloudflare.
 - App di động đã nối Supabase (bật bằng `apps/mobile/.env`, xem `apps/mobile/README.md`): đăng nhập SĐT + OTP với số test `0900000001`/`0900000002` mã `123456`; hook `hook_send_sms` chặn số thật cho tới khi có Zalo ZNS. Edge Function `member` (onboard, claimCode) cho thao tác ghi của khách.
-- Chưa có: gửi OTP thật (Zalo ZNS), màn khách tự nhập tên / ngày sinh, thông báo đẩy, kiểm thử trên điện thoại thật (Expo Go / EAS).
+- Blog + thông báo (2026-11-27): `apps/cms` (trang quản lý bài viết riêng, Cloudflare Pages `miwacare-cms`, vai `writer`/`editor`/`admin`), `apps/blog` (blog công khai, Pages Functions, `miwacare-blog`), Edge Function `cms` (gửi push qua Expo + hộp thư, chỉ khách đã đồng ý nhận tin). App: hộp thư (nút chuông), đọc bài bằng WebView `?app=1`, công tắc thông báo trong Tài khoản. Firebase project `miwacare-5e2db` (chỉ để FCM Android), `apps/mobile/google-services.json` được commit theo đồng ý của chủ dự án.
+- EAS: tài khoản Expo `khanhtoanapp`, project `@khanhtoanapp/miwacare`, mã app `vn.miwacare.app`; bản thử `eas build -p android --profile preview` (APK). Khoá ký Android do EAS giữ.
+- Chưa có: gửi OTP thật (Zalo ZNS), màn khách tự nhập tên / ngày sinh, thông báo giao dịch tự động (cộng điểm), bản iOS (cần Apple Developer).
 
 ## Quy ước kỹ thuật
 - Expo SDK mới nhất, TypeScript strict, Expo Router cho điều hướng.

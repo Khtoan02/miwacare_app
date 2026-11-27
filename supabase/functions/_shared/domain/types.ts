@@ -96,3 +96,22 @@ export type ClaimResult =
       gift: { value: string; title: string; note: string };
     }
   | { ok: false; reason: ClaimFailure };
+
+export type InboxKind = 'transaction' | 'promo' | 'article';
+
+/** Một tin trong hộp thư (F-22). `slug` có giá trị khi tin gắn với bài viết. */
+export interface InboxItem {
+  id: string;
+  kind: InboxKind;
+  title: string;
+  body: string;
+  at: string;
+  read: boolean;
+  slug: string | null;
+}
+
+/** Cài đặt thông báo của máy đang dùng (F-33). */
+export interface PushPrefs {
+  pushPoints: boolean;
+  pushPromo: boolean;
+}

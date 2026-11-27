@@ -193,6 +193,18 @@ async function claimCode(me: Me, raw: string): Promise<ClaimResult> {
   };
 }
 
+/** Lưu token push của máy (F-33). Một máy chỉ thuộc một khách: đăng nhập khách khác thì chuyển token sang khách đó. */
+async function registerDevice(me: Me, p: { token?: string; platform?: string; pushPoints?: boolean; pushPromo?: boolean }) {
+  const token = String(p?.token ?? '');
+  if (!/^ExponentPushToken\[[A-Za-z0-9_-]+\]$/.test(token)) throw new HttpError(400, 'Token thông báo không hợp lệ');
+  const platform = p?.platform === 'ios' || p?.platform === 'android' ? p.platform : 'android';
+  const row: Record<string, unknown> = { member_id: me.id, push_token: token, platform, updated_at: new Date().toISOString() };
+  if (typeof p?.pushPoints === 'boolean') row.push_points = p.pushPoints;
+  if (typeof p?.pushPromo === 'boolean') row.push_promo = p.pushPromo;
+  const saved = must(await db.from('devices').upsert(row, { onConflict: 'push_token' }).select('push_points, push_promo').single());
+  return { pushPoints: saved.push_points as boolean, pushPromo: saved.push_promo as boolean };
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
   if (req.method !== 'POST') return json({ error: 'Chỉ nhận POST' }, 405);
@@ -204,6 +216,11 @@ Deno.serve(async (req) => {
         return json(await onboard(me, payload as { marketing?: boolean; device?: string }));
       case 'claimCode':
         return json(await claimCode(me, String(payload?.code ?? '')));
+      case 'registerDevice':
+        return json(await registerDevice(me, payload as { token?: string; platform?: string; pushPoints?: boolean; pushPromo?: boolean }));
+      case 'unregisterDevice':
+        must(await db.from('devices').delete().eq('member_id', me.id).eq('push_token', String(payload?.token ?? '')));
+        return json({ ok: true });
       default:
         return json({ error: 'Thao tác không hợp lệ' }, 400);
     }

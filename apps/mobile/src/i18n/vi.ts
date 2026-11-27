@@ -80,6 +80,24 @@ export const vi = {
     noPoints: 'Không tích điểm',
     empty: 'Bạn chưa có đơn hàng nào.',
   },
+  inbox: {
+    title: 'Hộp thư',
+    readAll: 'Đánh dấu đã đọc hết',
+    empty: 'Chưa có tin nào. Ưu đãi và bài viết mới sẽ hiện ở đây.',
+    kind: { transaction: 'Tài khoản', promo: 'Khuyến mãi', article: 'Bài viết' },
+    allPosts: 'Xem cẩm nang & ưu đãi',
+    unread: (n: number) => `${n} tin chưa đọc`,
+  },
+  article: {
+    title: 'Bài viết',
+    blogTitle: 'Cẩm nang & ưu đãi',
+    loadError: 'Chưa tải được bài viết. Kiểm tra mạng rồi thử lại.',
+  },
+  push: {
+    channelNews: 'Ưu đãi và bài viết',
+    channelAccount: 'Điểm và đơn hàng',
+    off: 'Thông báo đang tắt cho MiwaCare. Bật trong Cài đặt của điện thoại để nhận tin.',
+  },
   account: {
     profile: 'Thông tin cá nhân',
     stores: 'Cửa hàng gần bạn',

@@ -1,6 +1,6 @@
 // DỮ LIỆU MẪU cho giai đoạn phát triển (chưa có Pancake, chưa có Supabase).
 // Tên hạng, quy tắc điểm, đơn hàng, ưu đãi đều là giá trị tạm — thay bằng cấu hình thật trên trang quản trị.
-import type { LedgerEntry, LoyaltyRuleVersion, Member, Offer, Order } from '@/domain/types';
+import type { InboxItem, LedgerEntry, LoyaltyRuleVersion, Member, Offer, Order } from '@/domain/types';
 
 export const mockRules: LoyaltyRuleVersion[] = [
   {
@@ -68,3 +68,10 @@ export const mockProgramCodes: Record<string, 'ok' | 'expired' | 'exhausted'> = 
 
 /** OTP cố định khi chạy dữ liệu mẫu (giống số test của Supabase). */
 export const MOCK_OTP = '123456';
+
+/** Hộp thư mẫu. */
+export const mockInbox: InboxItem[] = [
+  { id: 'i3', kind: 'transaction', title: '+38 điểm từ đơn #24118', body: 'Cảm ơn bạn đã mua hàng tại Cửa hàng Quận 7.', at: '2026-11-24T10:13:00+07:00', read: false, slug: null },
+  { id: 'i2', kind: 'promo', title: 'Nhân đôi điểm cuối tuần', body: 'Thứ 7 và Chủ nhật này, mọi đơn hàng được x2 điểm.', at: '2026-11-21T08:00:00+07:00', read: false, slug: null },
+  { id: 'i1', kind: 'article', title: 'Bé 1 tuổi nên uống bao nhiêu sữa mỗi ngày?', body: 'Gợi ý lượng sữa và cách chia bữa cho bé 12–24 tháng.', at: '2026-11-15T09:00:00+07:00', read: true, slug: null },
+];

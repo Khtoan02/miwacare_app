@@ -10,6 +10,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
 import { AuthProvider, useAuth } from '@/features/auth/AuthContext';
+import { useNotificationObserver, usePushPrefs } from '@/features/push/push';
 import { AppThemeProvider, useTheme } from '@/theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -17,7 +18,10 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1 } } });
 
 function Root() {
-  const { ready } = useAuth();
+  const { ready, token } = useAuth();
+  // Đăng nhập xong: xin quyền thông báo + lưu máy; chạm thông báo → mở bài / hộp thư.
+  usePushPrefs(ready && !!token);
+  useNotificationObserver(ready && !!token);
   const theme = useTheme();
   const [fontsLoaded, fontError] = useFonts({ OpenSans_400Regular, OpenSans_600SemiBold, OpenSans_700Bold, Comfortaa_700Bold });
   const done = ready && (fontsLoaded || !!fontError);

@@ -3,7 +3,7 @@ import { Bell, Check, ChevronRight, Gift, History, ScanLine, ShoppingBag } from 
 import { Pressable, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useMembership, useOffers, useOrders } from '@/data/hooks';
+import { useInbox, useMembership, useOffers, useOrders } from '@/data/hooks';
 import { t } from '@/i18n/vi';
 import { formatDelta } from '@/lib/format';
 import { palette, radius, shadow, space, useTheme } from '@/theme';
@@ -17,6 +17,8 @@ export default function Home() {
   const { member, progress, isLoading, error, refetch } = useMembership();
   const offers = useOffers();
   const orders = useOrders();
+  const inbox = useInbox();
+  const unread = (inbox.data ?? []).filter((m) => !m.read).length;
   const lastDone = orders.data?.find((o) => o.status === 'done');
 
   const quick: { label: string; icon: typeof Gift; bg: string; href: Href }[] = [
@@ -31,7 +33,7 @@ export default function Home() {
       <View style={[styles.band, { backgroundColor: color.bgTint }]} />
       <ScrollView
         contentContainerStyle={styles.content}
-        refreshControl={<RefreshControl refreshing={false} onRefresh={() => { refetch(); offers.refetch(); orders.refetch(); }} />}>
+        refreshControl={<RefreshControl refreshing={false} onRefresh={() => { refetch(); offers.refetch(); orders.refetch(); inbox.refetch(); }} />}>
         <View style={styles.headRow}>
           <View>
             <AppText variant="bodySm" color="textMuted">
@@ -39,9 +41,18 @@ export default function Home() {
             </AppText>
             <AppText variant="titleBrand">{member?.fullName.split(' ').slice(-2).join(' ') ?? ' '}</AppText>
           </View>
-          <CircleButton label={t.home.notifications} tone="surface" onPress={() => {}}>
-            <Bell size={22} color={color.text} />
-          </CircleButton>
+          <View>
+            <CircleButton label={unread ? `${t.home.notifications}, ${t.inbox.unread(unread)}` : t.home.notifications} tone="surface" onPress={() => router.push('/hop-thu')}>
+              <Bell size={22} color={color.text} />
+            </CircleButton>
+            {unread > 0 && (
+              <View pointerEvents="none" style={[styles.badge, { backgroundColor: color.dangerSolid }]}>
+                <AppText variant="caption" color="textOnPrimary" style={{ fontSize: 11, lineHeight: 14, fontFamily: 'OpenSans_700Bold' }}>
+                  {unread > 9 ? '9+' : unread}
+                </AppText>
+              </View>
+            )}
+          </View>
         </View>
 
         {isLoading && <Loading />}
@@ -99,6 +110,7 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
+  badge: { position: 'absolute', top: -2, right: -2, minWidth: 18, height: 18, paddingHorizontal: 4, borderRadius: 9, alignItems: 'center', justifyContent: 'center' },
   band: { position: 'absolute', left: 0, right: 0, top: 0, height: 300, borderBottomLeftRadius: 36, borderBottomRightRadius: 36 },
   content: { paddingHorizontal: space.screenX, paddingTop: space.lg, paddingBottom: space['3xl'], gap: space.xl },
   headRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },

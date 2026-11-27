@@ -2,11 +2,14 @@ import Constants from 'expo-constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ChevronRight, History, LifeBuoy, LogOut, MapPin, ShieldCheck, Trash2, User } from 'lucide-react-native';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
-import { Alert, Pressable, StyleSheet, Switch, View } from 'react-native';
+import { Alert, Platform, Pressable, StyleSheet, Switch, View } from 'react-native';
 
+import { api } from '@/data/api';
 import { useMembership } from '@/data/hooks';
 import { useAuth } from '@/features/auth/AuthContext';
+import { registerPush, unregisterPush, usePushPrefs } from '@/features/push/push';
 import { t } from '@/i18n/vi';
 import { prettyPhone } from '@/lib/format';
 import { palette, radius, space, tier, useTheme } from '@/theme';
@@ -56,8 +59,28 @@ export default function Account() {
   const { color } = useTheme();
   const { signOut } = useAuth();
   const { member, progress } = useMembership();
-  const [pushPoints, setPushPoints] = useState(true);
-  const [pushPromo, setPushPromo] = useState(false);
+  const qc = useQueryClient();
+  const prefs = usePushPrefs(true);
+  const marketing = useQuery({ queryKey: ['marketing'], queryFn: api.getMarketing });
+  // Giá trị khách vừa bấm (hiện ngay) — nếu chưa bấm thì lấy từ máy chủ.
+  const [override, setOverride] = useState<{ pushPoints?: boolean; pushPromo?: boolean }>({});
+  const pushPoints = override.pushPoints ?? prefs.data?.pushPoints ?? true;
+  const pushPromo = override.pushPromo ?? (!!marketing.data && (prefs.data?.pushPromo ?? true));
+  const setPushPoints = (v: boolean) => setOverride((o) => ({ ...o, pushPoints: v }));
+  const setPushPromo = (v: boolean) => setOverride((o) => ({ ...o, pushPromo: v }));
+
+  // Máy chưa cho phép thông báo (hoặc bản web) → chỉ ghi đồng ý nhận tin, nhắc bật trong Cài đặt.
+  async function savePrefs(next: { pushPoints?: boolean; pushPromo?: boolean }) {
+    try {
+      if (next.pushPromo !== undefined) await api.setMarketing(next.pushPromo);
+      const saved = await registerPush(next);
+      if (saved) qc.setQueryData(['pushPrefs'], saved);
+      else if (Platform.OS !== 'web') Alert.alert(t.push.off);
+      qc.invalidateQueries({ queryKey: ['marketing'] });
+    } catch {
+      Alert.alert(t.common.loadError);
+    }
+  }
   const soon = () => Alert.alert(t.account.comingSoon);
   const ic = color.text;
   const tc = progress ? tier[progress.current.colorKey] : null;
@@ -96,8 +119,8 @@ export default function Account() {
       </Card>
 
       <Card style={{ overflow: 'hidden' }}>
-        <ToggleRow label={t.account.pushPoints} hint={t.account.pushPointsHint} value={pushPoints} onChange={setPushPoints} />
-        <ToggleRow label={t.account.pushPromo} hint={t.account.pushPromoHint} value={pushPromo} onChange={setPushPromo} />
+        <ToggleRow label={t.account.pushPoints} hint={t.account.pushPointsHint} value={pushPoints} onChange={(v) => { setPushPoints(v); void savePrefs({ pushPoints: v }); }} />
+        <ToggleRow label={t.account.pushPromo} hint={t.account.pushPromoHint} value={pushPromo} onChange={(v) => { setPushPromo(v); void savePrefs({ pushPromo: v }); }} />
         <Row icon={<ShieldCheck size={20} color={ic} />} label={t.account.privacy} onPress={soon} last />
       </Card>
 
@@ -107,6 +130,7 @@ export default function Account() {
           icon={<LogOut size={20} color={ic} />}
           label={t.account.signOut}
           onPress={async () => {
+            await unregisterPush(); // F-06: máy này thôi nhận thông báo của tài khoản
             await signOut();
             router.replace('/login');
           }}

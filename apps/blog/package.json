@@ -1,0 +1,15 @@
+{
+  "name": "miwacare-blog",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build-tokens.mjs",
+    "dev": "node build-tokens.mjs && wrangler pages dev public --port 8788"
+  },
+  "dependencies": {
+    "marked": "^18.3.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}

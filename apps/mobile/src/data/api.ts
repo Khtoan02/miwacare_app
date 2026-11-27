@@ -1,9 +1,9 @@
 // Lớp truy cập dữ liệu. Màn hình chỉ gọi các hàm ở đây, không biết dữ liệu đến từ đâu.
 // EXPO_PUBLIC_DATA_SOURCE = 'mock' (mặc định, dữ liệu mẫu bên dưới) | 'supabase' (api.remote.ts).
-import type { ClaimResult, LedgerEntry, LoyaltyRuleVersion, Member, Offer, Order } from '@/domain/types';
+import type { ClaimResult, InboxItem, LedgerEntry, LoyaltyRuleVersion, Member, Offer, Order, PushPrefs } from '@/domain/types';
 import { DATA_SOURCE } from '@/lib/supabase';
 import { remoteApi } from './api.remote';
-import { mockLedger, mockMember, mockOffers, mockOrders, mockProgramCodes, mockRules, MOCK_OTP } from './mock';
+import { mockInbox, mockLedger, mockMember, mockOffers, mockOrders, mockProgramCodes, mockRules, MOCK_OTP } from './mock';
 
 function delay<T>(value: T, ms = 350): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms));
@@ -69,6 +69,34 @@ const mockApi = {
   },
 };
 
+const mockExtra = {
+  async getInbox(): Promise<InboxItem[]> {
+    return delay(mockInbox.map((m) => ({ ...m })));
+  },
+  async markInboxRead(itemId?: string): Promise<void> {
+    mockInbox.forEach((m) => {
+      if (!itemId || m.id === itemId) m.read = true;
+    });
+  },
+  async registerDevice(token: string, prefs?: Partial<PushPrefs>): Promise<PushPrefs> {
+    void token;
+    mockPrefs = { ...mockPrefs, ...prefs };
+    return { ...mockPrefs };
+  },
+  async unregisterDevice(token: string): Promise<void> {
+    void token;
+  },
+  async setMarketing(granted: boolean): Promise<void> {
+    mockMarketing = granted;
+  },
+  async getMarketing(): Promise<boolean> {
+    return mockMarketing;
+  },
+};
+let mockPrefs: PushPrefs = { pushPoints: true, pushPromo: false };
+let mockMarketing = false;
+
 // Hai bản phải cùng chữ ký: sai lệch sẽ báo lỗi khi typecheck.
-export const api: typeof mockApi = DATA_SOURCE === 'supabase' ? remoteApi : mockApi;
+const mockAll = { ...mockApi, ...mockExtra };
+export const api: typeof mockAll = DATA_SOURCE === 'supabase' ? remoteApi : mockAll;
 export const IS_MOCK = DATA_SOURCE === 'mock';

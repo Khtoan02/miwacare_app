@@ -23,3 +23,5 @@ export function useMembership() {
     refetch: () => Promise.all([me.refetch(), rules.refetch()]),
   };
 }
+
+export const useInbox = () => useQuery({ queryKey: ['inbox'], queryFn: api.getInbox });

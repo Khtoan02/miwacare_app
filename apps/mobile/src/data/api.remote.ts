@@ -3,7 +3,7 @@
 import { Platform } from 'react-native';
 
 import { ruleAt, tierProgress } from '@/domain/points';
-import type { ClaimResult, LedgerEntry, LedgerReason, LoyaltyRuleVersion, Member, Offer, Order, OrderStatus } from '@/domain/types';
+import type { ClaimResult, InboxItem, InboxKind, LedgerEntry, LedgerReason, LoyaltyRuleVersion, Member, Offer, Order, OrderStatus, PushPrefs } from '@/domain/types';
 import { t } from '@/i18n/vi';
 import { formatDayMonth, formatNumber } from '@/lib/format';
 import { supabase, toE164 } from '@/lib/supabase';
@@ -173,5 +173,47 @@ export const remoteApi = {
 
   async claimProgramCode(raw: string): Promise<ClaimResult> {
     return call<ClaimResult>('claimCode', { code: raw });
+  },
+
+  async getInbox(): Promise<InboxItem[]> {
+    const id = await uid();
+    const rows = must(await client().from('inbox').select('id, kind, title, body, created_at, read_at, post:posts(slug)').eq('member_id', id).order('created_at', { ascending: false }).limit(100)) ?? [];
+    return rows.map((r: Row) => ({
+      id: String(r.id),
+      kind: r.kind as InboxKind,
+      title: String(r.title),
+      body: String(r.body),
+      at: String(r.created_at),
+      read: !!r.read_at,
+      slug: (r.post as { slug?: string } | null)?.slug ?? null,
+    }));
+  },
+
+  /** Đánh dấu đã đọc: một tin, hoặc tất cả khi không truyền id. */
+  async markInboxRead(itemId?: string): Promise<void> {
+    const id = await uid();
+    let q = client().from('inbox').update({ read_at: new Date().toISOString() }).eq('member_id', id).is('read_at', null);
+    if (itemId) q = q.eq('id', itemId);
+    must(await q);
+  },
+
+  /** Lưu token push + cài đặt của máy này. */
+  async registerDevice(token: string, prefs?: Partial<PushPrefs>): Promise<PushPrefs> {
+    return call<PushPrefs>('registerDevice', { token, platform: Platform.OS, ...prefs });
+  },
+
+  async unregisterDevice(token: string): Promise<void> {
+    await call('unregisterDevice', { token });
+  },
+
+  /** Đồng ý / thôi nhận tin ưu đãi và bài viết (ghi vào consents). */
+  async setMarketing(granted: boolean): Promise<void> {
+    await call('onboard', { marketing: granted, device: Platform.OS });
+  },
+
+  async getMarketing(): Promise<boolean> {
+    const id = await uid();
+    const row = must(await client().from('consents').select('granted').eq('member_id', id).eq('purpose', 'marketing').order('created_at', { ascending: false }).limit(1).maybeSingle()) as Row | null;
+    return !!row?.granted;
   },
 };
